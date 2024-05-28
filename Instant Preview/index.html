@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant Preview IDE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS content here */
+    </style>
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>Live Code Editor</h1>
+            <div>
+                <button id="toggle-dark-mode">Toggle Dark Mode</button>
+                <button id="save">Save</button>
+                <button id="load">Load</button>
+                <select id="template-selector">
+                    <option value="">Select Template</option>
+                    <option value="example1">Example 1: Hello World</option>
+                    <option value="example2">Example 2: Button Alert</option>
+                    <option value="example3">Example 3: Animated Box</option>
+                    <option value="example4">Example 4: Responsive Grid</option>
+                    <option value="example5">Example 5: Simple Form</option>
+                    <option value="example6">Example 6: CSS Transform</option>
+                    <option value="example7">Example 7: Hover Effects</option>
+                    <option value="example8">Example 8: Accordion</option>
+                    <option value="example9">Example 9: Modal</option>
+                    <option value="example10">Example 10: Snake Game</option>
+                </select>
+            </div>
+        </header>
+        <main>
+            <div id="editor">
+                <textarea id="html-code" placeholder="HTML"></textarea>
+                <textarea id="css-code" placeholder="CSS"></textarea>
+                <textarea id="js-code" placeholder="JavaScript"></textarea>
+            </div>
+            <iframe id="output"></iframe>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const htmlCode = document.getElementById('html-code');
+            const cssCode = document.getElementById('css-code');
+            const jsCode = document.getElementById('js-code');
+            const output = document.getElementById('output');
+            const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
+            const saveBtn = document.getElementById('save');
+            const loadBtn = document.getElementById('load');
+            const templateSelector = document.getElementById('template-selector');
+
+            const updateOutput = () => {
+                const html = htmlCode.value;
+                const css = `<style>${cssCode.value}</style>`;
+                const js = `<script>${jsCode.value}<\/script>`;
+                const srcDoc = `${html}${css}${js}`;
+                output.srcdoc = srcDoc;
+            };
+
+            const toggleDarkMode = () => {
+                document.body.classList.toggle('dark-mode');
+            };
+
+            const saveCode = () => {
+                localStorage.setItem('htmlCode', htmlCode.value);
+                localStorage.setItem('cssCode', cssCode.value);
+                localStorage.setItem('jsCode', jsCode.value);
+            };
+
+            const loadCode = () => {
+                htmlCode.value = localStorage.getItem('htmlCode') || '';
+                cssCode.value = localStorage.getItem('cssCode') || '';
+                jsCode.value = localStorage.getItem('jsCode') || '';
+                updateOutput();
+            };
+
+            const loadTemplate = (template) => {
+                switch (template) {
+                    case 'example1':
+                        htmlCode.value = '<h1>Hello World</h1>';
+                        cssCode.value = 'h1 { color: blue; }';
+                        jsCode.value = 'console.log("Hello World");';
+                        break;
+                    case 'example2':
+                        htmlCode.value = '<button>Click Me</button>';
+                        cssCode.value = 'button { font-size: 20px; padding: 10px 20px; }';
+                        jsCode.value = 'document.querySelector("button").onclick = () => alert("Button clicked!");';
+                        break;
+                    case 'example3':
+                        htmlCode.value = '<div class="box"></div>';
+                        cssCode.value = '.box { width: 100px; height: 100px; background-color: red; animation: move 2s infinite; } @keyframes move { 0% { transform: translateX(0); } 50% { transform: translateX(200px); } 100% { transform: translateX(0); } }';
+                        jsCode.value = '';
+                        break;
+                    case 'example4':
+                        htmlCode.value = '<div class="grid-container"><div class="grid-item">1</div><div class="grid-item">2</div><div class="grid-item">3</div><div class="grid-item">4</div><div class="grid-item">5</div><div class="grid-item">6</div></div>';
+                        cssCode.value = '.grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; } .grid-item { background-color: #007BFF; color: white; padding: 20px; text-align: center; }';
+                        jsCode.value = '';
+                        break;
+                    case 'example5':
+                        htmlCode.value = '<form><label for="name">Name:</label><input type="text" id="name" name="name"><input type="submit" value="Submit"></form>';
+                        cssCode.value = 'form { display: flex; flex-direction: column; } label, input { margin: 5px 0; } input[type="text"] { padding: 8px; } input[type="submit"] { padding: 8px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }';
+                        jsCode.value = 'document.querySelector("form").onsubmit = (e) => { e.preventDefault(); alert("Form submitted!"); }';
+                        break;
+                    case 'example6':
+                        htmlCode.value = '<div class="transform-box"></div>';
+                        cssCode.value = '.transform-box { width: 100px; height: 100px; background-color: green; transition: transform 0.5s; } .transform-box:hover { transform: rotate(45deg) scale(1.5); }';
+                        jsCode.value = '';
+                        break;
+                    case 'example7':
+                        htmlCode.value = '<button class="hover-button">Hover Me</button>';
+                        cssCode.value = '.hover-button { padding: 10px 20px; font-size: 18px; border: none; background-color: #6200ea; color: white; cursor: pointer; transition: background-color 0.3s, transform 0.3s; } .hover-button:hover { background-color: #3700b3; transform: scale(1.1); }';
+                        jsCode.value = '';
+                        break;
+                    case 'example8':
+                        htmlCode.value = '<div class="accordion"><div class="accordion-item"><h2 class="accordion-header">Section 1</h2><div class="accordion-content">Content for section 1</div></div><div class="accordion-item"><h2 class="accordion-header">Section 2</h2><div class="accordion-content">Content for section 2</div></div><div class="accordion-item"><h2 class="accordion-header">Section 3</h2><div class="accordion-content">Content for section 3</div></div></div>';
+                        cssCode.value = '.accordion-header { background-color: #007bff; color: white; padding: 10px; cursor: pointer; } .accordion-content { display: none; padding: 10px; background-color: #e9ecef; } .accordion-content.show { display: block; }';
+                        jsCode.value = 'document.querySelectorAll(".accordion-header").forEach(header => { header.onclick = () => { const content = header.nextElementSibling; content.classList.toggle("show"); }; });';
+                        break;
+                    case 'example9':
+                        htmlCode.value = '<button id="open-modal">Open Modal</button><div id="modal" class="modal"><div class="modal-content"><span id="close-modal" class="close">&times;</span><p>This is a modal!</p></div></div>';
+                        cssCode.value = '#modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); } .modal-content { position: relative; margin: 10% auto; padding: 20px; background-color: white; width: 80%; max-width: 500px; } .close { position: absolute; top: 10px; right: 10px; cursor: pointer; }';
+                        jsCode.value = 'document.getElementById("open-modal").onclick = () => { document.getElementById("modal").style.display = "block"; }; document.getElementById("close-modal").onclick = () => { document.getElementById("modal").style.display = "none"; }; window.onclick = (event) => { if (event.target == document.getElementById("modal")) { document.getElementById("modal").style.display = "none"; } };';
+                        break;
+                    case 'example10':
+                        htmlCode.value = '<canvas id="snake-game" width="400" height="400"></canvas>';
+                        cssCode.value = '#snake-game { border: 1px solid black; }';
+                        jsCode.value = 'const canvas = document.getElementById("snake-game"); const ctx = canvas.getContext("2d"); let snake = [{ x: 150, y: 150 }, { x: 140, y: 150 }, { x: 130, y: 150 }, { x: 120, y: 150 }, { x: 110, y: 150 }]; let dx = 10; let dy = 0; let foodX; let foodY; let changingDirection = false; let score = 0; const main = () => { if (didGameEnd()) return; setTimeout(() => { changingDirection = false; clearCanvas(); drawFood(); advanceSnake(); drawSnake(); main(); }, 100); }; const clearCanvas = () => { ctx.fillStyle = "white"; ctx.strokeStyle = "black"; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeRect(0, 0, canvas.width, canvas.height); }; const drawSnake = () => { snake.forEach(drawSnakePart); }; const advanceSnake = () => { const head = { x: snake[0].x + dx, y: snake[0].y + dy }; snake.unshift(head); const didEatFood = snake[0].x === foodX && snake[0].y === foodY; if (didEatFood) { score += 10; document.getElementById("score").innerHTML = score; createFood(); } else { snake.pop(); } }; const drawSnakePart = (snakePart) => { ctx.fillStyle = "lightgreen"; ctx.strokeStyle = "darkgreen"; ctx.fillRect(snakePart.x, snakePart.y, 10, 10); ctx.strokeRect(snakePart.x, snakePart.y, 10, 10); }; const createFood = () => { foodX = randomTen(0, canvas.width - 10); foodY = randomTen(0, canvas.height - 10); snake.forEach(part => { const hasEaten = part.x === foodX && part.y === foodY; if (hasEaten) createFood(); }); }; const drawFood = () => { ctx.fillStyle = "red"; ctx.strokeStyle = "darkred"; ctx.fillRect(foodX, foodY, 10, 10); ctx.strokeRect(foodX, foodY, 10, 10); }; const randomTen = (min, max) => { return Math.round((Math.random() * (max - min) + min) / 10) * 10; }; const changeDirection = (event) => { const LEFT_KEY = 37; const RIGHT_KEY = 39; const UP_KEY = 38; const DOWN_KEY = 40; if (changingDirection) return; changingDirection = true; const keyPressed = event.keyCode; const goingUp = dy === -10; const goingDown = dy === 10; const goingRight = dx === 10; const goingLeft = dx === -10; if (keyPressed === LEFT_KEY && !goingRight) { dx = -10; dy = 0; } if (keyPressed === UP_KEY && !goingDown) { dx = 0; dy = -10; } if (keyPressed === RIGHT_KEY && !goingLeft) { dx = 10; dy = 0; } if (keyPressed === DOWN_KEY && !goingUp) { dx = 0; dy = 10; } }; const didGameEnd = () => { for (let i = 4; i < snake.length; i++) { const didCollide = snake[i].x === snake[0].x && snake[i].y === snake[0].y; if (didCollide) return true; } const hitLeftWall = snake[0].x < 0; const hitRightWall = snake[0].x > canvas.width - 10; const hitToptWall = snake[0].y < 0; const hitBottomWall = snake[0].y > canvas.height - 10; return hitLeftWall || hitRightWall || hitToptWall || hitBottomWall; }; document.addEventListener("keydown", changeDirection); createFood(); main();';
+                        break;
+                    default:
+                        htmlCode.value = '';
+                        cssCode.value = '';
+                        jsCode.value = '';
+                        break;
+                }
+                updateOutput();
+            };
+
+            htmlCode.addEventListener('input', updateOutput);
+            cssCode.addEventListener('input', updateOutput);
+            jsCode.addEventListener('input', updateOutput);
+            toggleDarkModeBtn.addEventListener('click', toggleDarkMode);
+            saveBtn.addEventListener('click', saveCode);
+            loadBtn.addEventListener('click', loadCode);
+            templateSelector.addEventListener('change', (e) => loadTemplate(e.target.value));
+        });
+    </script>
+</body>
+</html>
